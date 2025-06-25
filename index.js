@@ -9,7 +9,7 @@ dotenv.config();
 // Konfigurasi bot dan admin
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const ADMIN_CHAT_IDS = [process.env.ADMIN_CHAT_ID];
-const DANA_QR_LINK = 'https://files.catbox.moe/9b81tk.jpg';
+const DANA_QR_LINK = 'https://files.catbox.moe/mxovdq.jpg';
 
 // Timeout (ms)
 const PAYMENT_TIMEOUT = 24 * 60 * 60 * 1000;   // 24 jam
@@ -133,7 +133,7 @@ bot.action(/^(lokal|cina|asia|amerika|yaoi|lengkap)$/, (ctx) => {
 
     const pkg = paketList[paketId];
     const caption = `📦 *${pkg.name}* – Rp${pkg.harga.toLocaleString('id-ID')}\n\n` +
-      `Silakan scan QR di atas menggunakan aplikasi DANA/OVO/Gopay.\n` +
+      `Silakan scan QR di atas.\n` +
       `Kirim bukti pembayaran (foto/screenshot) ke sini.\n\n` +
       `*Jangan kirim bukti palsu, kamu bisa di-banned!*\n` +
       `Butuh bantuan? Hubungi admin @ujoyp`;
@@ -225,7 +225,7 @@ bot.on('photo', (ctx) => {
   const photoFileId = ctx.message.photo.slice(-1)[0].file_id;
 
   db.get(`SELECT paket FROM users WHERE id = ?`, [userId], (err, row) => {
-    if (!row) return ctx.reply('❌ Kamu belum memilih paket.');
+    if (!row) return ctx.reply('❌ Kamu belum memilih paket. Silahkan klik /start dan pencet tombol sesuai yang inggin kamu pesan!');
 
     ADMIN_CHAT_IDS.forEach(adminId => {
       ctx.telegram.sendPhoto(adminId, photoFileId, {
@@ -239,7 +239,7 @@ bot.on('photo', (ctx) => {
       });
     });
 
-    ctx.reply('📩 Bukti pembayaran dikirim ke admin. Mohon tunggu.');
+    ctx.reply('📩 Bukti pembayaran dikirim ke admin. Mohon tunggu sebentar, jika admin belum merespon hub : @ujoyp.');
   });
 });
 
