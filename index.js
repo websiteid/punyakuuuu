@@ -9,8 +9,7 @@ dotenv.config();
 // Inisialisasi bot & konfigurasi
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const ADMIN_CHAT_IDS = [process.env.ADMIN_CHAT_ID];
-const DANA_NUMBER = '087883536039';
-const DANA_QR_LINK = 'https://files.catbox.moe/blokl7.jpg';
+const DANA_QR_LINK = 'https://files.catbox.moe/9b81tk.jpg';
 
 // Timeout dalam ms
 const PAYMENT_TIMEOUT = 24 * 60 * 60 * 1000;   // 24 jam
@@ -75,7 +74,7 @@ const paketList = {
 // Fungsi: tampilkan menu utama paket
 function showMainMenu(ctx) {
   ctx.reply(
-    `👋 Selamat datang!\n\nPilih paket yang kamu inginkan:\n` +
+    `👋 Selamat datang dibot VIP @ujoyp!\n\nPilih paket yang kamu inginkan:\n` +
     `📦 Lokal - Rp2.000\n📦 Cina - Rp2.000\n📦 Asia - Rp2.000\n` +
     `📦 Amerika - Rp2.000\n📦 Yaoi - Rp2.000\n📦 Paket Lengkap - Rp8.000`,
     Markup.inlineKeyboard([
@@ -125,8 +124,8 @@ bot.action(/^(lokal|cina|asia|amerika|yaoi|lengkap)$/, (ctx) => {
 
     const pkg = paketList[paketId];
     let caption = `📦 *${pkg.name}* – Rp${pkg.harga.toLocaleString('id-ID')}\n\n` +
-                  `Silakan bayar DANA/QRIS ke:\n📱 *${DANA_NUMBER}* (DANA)\n\n` +
-                  `Setelah bayar, kirim bukti foto/ss hasil transaksi.\n\n` +
+                  `Untuk melanjukan transaksi scan QRIS diats. Mohon untuk kirim sesuai nominal yang tertera!* (DANA)\n\n` +
+                  `Setelah bayar, kirim bukti foto/ss hasil transaksi. Mengirim bukti palsu akan kita ban.\n\n` +
                   `Butuh bantuan❓ Chat admin @ujoyp`;
 
     ctx.replyWithPhoto(DANA_QR_LINK, {
