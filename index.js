@@ -3,15 +3,15 @@ const dotenv = require('dotenv');
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 
-// Load .env
+// Load environment variables
 dotenv.config();
 
-// Inisialisasi bot & konfigurasi
+// Konfigurasi bot dan admin
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const ADMIN_CHAT_IDS = [process.env.ADMIN_CHAT_ID];
 const DANA_QR_LINK = 'https://files.catbox.moe/9b81tk.jpg';
 
-// Timeout dalam ms
+// Timeout (ms)
 const PAYMENT_TIMEOUT = 24 * 60 * 60 * 1000;   // 24 jam
 const REMINDER_TIMEOUT = 12 * 60 * 60 * 1000;  // 12 jam
 
@@ -29,7 +29,16 @@ db.serialize(() => {
   )`, (err) => {
     if (err) console.error('Error creating orders table:', err.message);
   });
+
+  db.run(`CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    paket TEXT,
+    status TEXT
+  )`, (err) => {
+    if (err) console.error('Error creating users table:', err.message);
+  });
 });
+
 
 // Daftar paket tersedia
 const paketList = {
@@ -123,10 +132,11 @@ bot.action(/^(lokal|cina|asia|amerika|yaoi|lengkap)$/, (ctx) => {
 
 
     const pkg = paketList[paketId];
-    let caption = `📦 *${pkg.name}* – Rp${pkg.harga.toLocaleString('id-ID')}\n\n` +
-                  `Untuk melanjukan transaksi scan QRIS diats. Mohon untuk kirim sesuai nominal yang tertera!* (DANA)\n\n` +
-                  `Setelah bayar, kirim bukti foto/ss hasil transaksi. Mengirim bukti palsu akan kita ban.\n\n` +
-                  `Butuh bantuan❓ Chat admin @ujoyp`;
+    const caption = `📦 *${pkg.name}* – Rp${pkg.harga.toLocaleString('id-ID')}\n\n` +
+      `Silakan scan QR di atas menggunakan aplikasi DANA/OVO/Gopay.\n` +
+      `Kirim bukti pembayaran (foto/screenshot) ke sini.\n\n` +
+      `*Jangan kirim bukti palsu, kamu bisa di-banned!*\n` +
+      `Butuh bantuan? Hubungi admin @ujoyp`;
 
     ctx.replyWithPhoto(DANA_QR_LINK, {
       caption,
@@ -136,6 +146,7 @@ bot.action(/^(lokal|cina|asia|amerika|yaoi|lengkap)$/, (ctx) => {
         [Markup.button.callback('❌ Batalkan Pesanan', 'cancel_order')]
       ])
     });
+
 
 
 
